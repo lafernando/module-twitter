@@ -163,18 +163,18 @@ function convertToPlaceType(json jsonPlaceType) returns PlaceType {
     return placeType;
 }
 
-function convertTrends(json jsonTrends) returns Trends[] {
+function convertTrends(json jsonTrends) returns Trends[]|error {
     Trends[] trends = [];
     if (jsonTrends is json[]) {
-        trends[0] = convertToTrends(jsonTrends[0]);
+        trends[0] = check convertToTrends(jsonTrends[0]);
     }
     return trends;
 }
 
-function convertToTrends(json jsonTrends) returns Trends {
+function convertToTrends(json jsonTrends) returns Trends|error {
     Trends trendList = {};
-    trendList.trends = convertTrendList(<json[]>jsonTrends.trends);
-    trendList.location = convertToLocations(<json[]>jsonTrends.locations);
+    trendList.trends = convertTrendList(<json[]>check jsonTrends.trends);
+    trendList.location = convertToLocations(<json[]>check jsonTrends.locations);
     var createdAt = jsonTrends.created_at;
     if (createdAt is json) {
        trendList.createdAt = createdAt != null ? createdAt.toString() : "";

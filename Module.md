@@ -7,31 +7,31 @@ You can also retrieve and destroy a status, and retrieve closest trend locations
 
 **Status Operations**
 
-The `wso2/twitter` module contains operations that work with statuses. You can update the current status, retweet a tweet, 
+The `ballerinax/twitter` module contains operations that work with statuses. You can update the current status, retweet a tweet, 
 untweet a retweeted status, retrieve a status, and destroy a status.
 
 **Search Operations**
 
-The `wso2/twitter` module contains operations that search for tweets. 
+The `ballerinax/twitter` module contains operations that search for tweets. 
 
 **Trends Operations**
 
-The `wso2/twitter` module contains operations that retrieve closest trend locations and retrieve top trends by place.
+The `ballerinax/twitter` module contains operations that retrieve closest trend locations and retrieve top trends by place.
 
 
 ## Compatibility
 |                    |    Version     |  
 |:------------------:|:--------------:|
-| Ballerina Language |   1.0.0        |
+| Ballerina Language |   Swan Lake    |
 | Twitter API        |   1.1          |
 
 
 ## Sample
 
-First, import the `wso2/twitter` module into the Ballerina project.
+First, import the `ballerinax/twitter` module into the Ballerina project.
 
 ```ballerina
-import wso2/twitter;
+import ballerinax/twitter;
 ```
     
 The Twitter connector can be instantiated using the Consumer Key (API Key), Consumer Secret (API Secret), Access Token, 

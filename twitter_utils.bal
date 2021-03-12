@@ -20,15 +20,15 @@ import ballerina/crypto;
 import ballerina/encoding;
 import ballerina/http;
 import ballerina/io;
-import ballerina/system;
+import ballerina/uuid;
+import ballerina/regex;
 import ballerina/time;
-import ballerina/stringutils;
 
 string timeStamp = "";
 string nonceString = "";
 
 function constructOAuthParams(string consumerKey, string accessToken) returns string {
-    nonceString = system:uuid();
+    nonceString = uuid:createType4AsString();
     time:Time time = time:currentTime();
     int currentTimeMills = time.time;
     timeStamp = io:sprintf("%s", currentTimeMills / 1000);
@@ -51,7 +51,7 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
     byte[] baseStringByte = baseString.toBytes();
     string keyStr = encodedConsumerSecretValue + "&" + encodedAccessTokenSecretValue;
     byte[] keyArrByte = keyStr.toBytes();
-    string signature = crypto:hmacSha1(baseStringByte, keyArrByte).toBase64();
+    string signature = (check crypto:hmacSha1(baseStringByte, keyArrByte)).toBase64();
 
     string encodedSignatureValue = check encoding:encodeUriComponent(signature, "UTF-8");
     string encodedaccessTokenValue = check encoding:encodeUriComponent(accessToken, "UTF-8");
@@ -60,15 +60,14 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
         "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"" + timeStamp +
         "\",oauth_nonce=\"" + nonceString + "\",oauth_version=\"1.0\",oauth_signature=\"" +
         encodedSignatureValue + "\",oauth_token=\"" + encodedaccessTokenValue + "\"";
-    request.setHeader("Authorization", stringutils:replaceAll(oauthHeaderString, "\\\\", ""));
-    return ();
+    request.setHeader("Authorization", regex:replaceAll(oauthHeaderString, "\\\\\\\\", ""));
 }
 
 function setResponseError(json jsonResponse) returns error {
     json|error errors = check jsonResponse.errors;
     error err;
     if (errors is json[]) {
-        err = error(TWITTER_ERROR_CODE, message = errors[0].message.toString());
+        err = error(TWITTER_ERROR_CODE, message = (check errors[0].message).toString());
     } else if (errors is error) {
         err = errors;
     } else {

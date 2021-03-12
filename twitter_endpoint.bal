@@ -19,14 +19,14 @@
 import ballerina/encoding;
 import ballerina/http;
 
-# Twitter Client object.
+# Twitter client implementation.
 #
 # + accessToken - The access token of the Twitter account
 # + accessTokenSecret - The access token secret of the Twitter account
 # + clientId - The consumer key of the Twitter account
 # + clientSecret - The consumer secret of the Twitter account
 # + twitterClient - HTTP Client endpoint
-public type Client client object {
+public client class Client {
 
     string accessToken;
     string accessTokenSecret;
@@ -34,8 +34,8 @@ public type Client client object {
     string clientSecret;
     http:Client twitterClient;
 
-    public function __init(TwitterConfiguration twitterConfig) {
-        self.twitterClient = new(TWITTER_API_URL, twitterConfig.clientConfig);
+    public function init(TwitterConfiguration twitterConfig) returns error? {
+        self.twitterClient = check new(TWITTER_API_URL, twitterConfig.clientConfig);
         self.accessToken = twitterConfig.accessToken;
         self.accessTokenSecret = twitterConfig.accessTokenSecret;
         self.clientId = twitterConfig.clientId;
@@ -48,7 +48,7 @@ public type Client client object {
     # + status - The text of status update
     # + args - The user parameters as args
     # + return - If success, returns Status object, else returns error.
-    public remote function tweet(string status, string... args) returns @tainted Status|error {
+    remote function tweet(string status, string... args) returns @tainted Status|error {
         http:Request request = new;
 
         string mediaIds = "";
@@ -114,7 +114,7 @@ public type Client client object {
     #
     # + id - The numerical ID of the desired status
     # + return - If success, returns Status object, else returns error.
-    public remote function retweet(int id) returns @tainted Status|error {
+    remote function retweet(int id) returns @tainted Status|error {
         http:Request request = new;
         string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
 
@@ -152,7 +152,7 @@ public type Client client object {
     #
     # + id - The numerical ID of the desired status
     # + return - If success, returns Status object, else returns error.
-    public remote function unretweet(int id) returns @tainted Status|error {
+    remote function unretweet(int id) returns @tainted Status|error {
         http:Request request = new;
         string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
 
@@ -191,7 +191,7 @@ public type Client client object {
     # + queryStr - Query string to retrieve the related tweets
     # + searchRequest - It contains optional params that is needed for search operation(tweetsCount)
     # + return - If success, Status[] object, else returns error
-    public remote function search(string queryStr, SearchRequest searchRequest) returns @tainted Status[]|error {
+    remote function search(string queryStr, SearchRequest searchRequest) returns @tainted Status[]|error {
         string tweetPath = SEARCH_ENDPOINT;
         string encodedQueryValue = check encoding:encodeUriComponent(queryStr, UTF_8);
         string urlParams = "q=" + encodedQueryValue + "&";
@@ -222,7 +222,7 @@ public type Client client object {
                     if (statusCode == http:STATUS_OK) {
                         Status[] searchResponse = [];
                         if (jsonPayload.statuses is json) {
-                            searchResponse = convertToStatuses(<json[]>jsonPayload.statuses);
+                            searchResponse = convertToStatuses(<json[]>check jsonPayload.statuses);
                         }
                         return searchResponse;
                     } else {
@@ -244,7 +244,7 @@ public type Client client object {
     #
     # + id - The numerical ID of the desired status
     # + return - If success, returns Status object, else returns error
-    public remote function showStatus(int id) returns @tainted Status|error {
+    remote function showStatus(int id) returns @tainted Status|error {
         http:Request request = new;
         string tweetPath = SHOW_STATUS_ENDPOINT;
         string urlParams = ID + id.toString();
@@ -284,7 +284,7 @@ public type Client client object {
     #
     # + id - The numerical ID of the desired status
     # + return - If success, returns Status object, else returns error
-    public remote function destroyStatus(int id) returns @tainted Status|error {
+    remote function destroyStatus(int id) returns @tainted Status|error {
         http:Request request = new;
         string oauthStr = constructOAuthParams(self.clientId, self.accessToken);
 
@@ -323,7 +323,7 @@ public type Client client object {
     # + lat - Latitude of the location
     # + long - Longitude of the location
     # + return - If success, returns Location[] object, else returns error
-    public remote function getClosestTrendLocations(float lat, float long) returns @tainted Location[]|error {
+    remote function getClosestTrendLocations(float lat, float long) returns @tainted Location[]|error {
         string tweetPath = TRENDS_ENDPOINT;
         string urlParams = LAT + lat.toString() + LONG + long.toString();
         string oauthStr = urlParams.substring(1, urlParams.length()) + "&" + constructOAuthParams(self.clientId,
@@ -364,7 +364,7 @@ public type Client client object {
     #
     # + locationId - Where On Earth ID of the location to return trending information for
     # + return - If success, returns Trends[] object, else returns error
-    public remote function getTopTrendsByPlace(int locationId) returns @tainted Trends[]|error {
+    remote function getTopTrendsByPlace(int locationId) returns @tainted Trends[]|error {
         string tweetPath = TRENDS_PLACE_ENDPOINT;
         string urlParams = ID + locationId.toString();
         string oauthStr = urlParams + "&" + constructOAuthParams(self.clientId, self.accessToken);
@@ -400,7 +400,7 @@ public type Client client object {
             }
         }
     }
-};
+}
 
 # Twitter Connector configurations can be setup here.
 #

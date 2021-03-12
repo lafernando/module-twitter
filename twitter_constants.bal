@@ -39,4 +39,4 @@ final string GET = "GET";
 final string JSON = ".json";
 
 // Error Codes
-final string TWITTER_ERROR_CODE = "(wso2/twitter)TwitterError";
+final string TWITTER_ERROR_CODE = "(ballerinax/twitter)TwitterError";
