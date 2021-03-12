@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-function convertToStatus(json jsonStatus) returns Status {
+isolated function convertToStatus(json jsonStatus) returns Status {
     Status status = {};
     var createdAt = jsonStatus.created_at;
     if (createdAt is json) {
@@ -67,28 +67,28 @@ function convertToStatus(json jsonStatus) returns Status {
     return status;
 }
 
-function convertToInt(json jsonVal) returns int {
+isolated function convertToInt(json jsonVal) returns int {
     if (jsonVal is int) {
         return jsonVal;
     }
     panic error("Error occurred when converting " + jsonVal.toString() + " to int");
 }
 
-function convertToBoolean(json jsonVal) returns boolean {
+isolated function convertToBoolean(json jsonVal) returns boolean {
     if (jsonVal is boolean) {
         return jsonVal;
     }
     panic error("Error occurred when converting " + jsonVal.toString() + " to boolean");
 }
 
-function convertToFloat(json jsonVal) returns float {
+isolated function convertToFloat(json jsonVal) returns float {
     if (jsonVal is float) {
         return jsonVal;
     }
     panic error("Error occurred when converting " + jsonVal.toString() + " to float");
 }
 
-function convertToGeoLocation(json jsonStatus) returns GeoLocation {
+isolated function convertToGeoLocation(json jsonStatus) returns GeoLocation {
     GeoLocation geoLocation = {};
     var latitude = jsonStatus.geo.latitude;
     if (latitude is json) {
@@ -101,7 +101,7 @@ function convertToGeoLocation(json jsonStatus) returns GeoLocation {
     return geoLocation;
 }
 
-function convertToStatuses(json[] jsonStatuses) returns Status[] {
+isolated function convertToStatuses(json[] jsonStatuses) returns Status[] {
     Status[] statuses = [];
     int i = 0;
     foreach json jsonStatus in jsonStatuses {
@@ -111,7 +111,7 @@ function convertToStatuses(json[] jsonStatuses) returns Status[] {
     return statuses;
 }
 
-function convertToLocations(json[] jsonLocations) returns Location[] {
+isolated function convertToLocations(json[] jsonLocations) returns Location[] {
     Location[] locations = [];
     int i = 0;
     foreach json jsonLocation in jsonLocations {
@@ -121,7 +121,7 @@ function convertToLocations(json[] jsonLocations) returns Location[] {
     return locations;
 }
 
-function convertToLocation(json jsonLocation) returns Location {
+isolated function convertToLocation(json jsonLocation) returns Location {
     Location location = {};
     var countryName = jsonLocation.country;
     if (countryName is json) {
@@ -150,7 +150,7 @@ function convertToLocation(json jsonLocation) returns Location {
     return location;
 }
 
-function convertToPlaceType(json jsonPlaceType) returns PlaceType {
+isolated function convertToPlaceType(json jsonPlaceType) returns PlaceType {
     PlaceType placeType = {};
     var code = jsonPlaceType.code;
     if (code is json) {
@@ -163,7 +163,7 @@ function convertToPlaceType(json jsonPlaceType) returns PlaceType {
     return placeType;
 }
 
-function convertTrends(json jsonTrends) returns Trends[]|error {
+isolated function convertTrends(json jsonTrends) returns Trends[]|error {
     Trends[] trends = [];
     if (jsonTrends is json[]) {
         trends[0] = check convertToTrends(jsonTrends[0]);
@@ -171,7 +171,7 @@ function convertTrends(json jsonTrends) returns Trends[]|error {
     return trends;
 }
 
-function convertToTrends(json jsonTrends) returns Trends|error {
+isolated function convertToTrends(json jsonTrends) returns Trends|error {
     Trends trendList = {};
     trendList.trends = convertTrendList(<json[]>check jsonTrends.trends);
     trendList.location = convertToLocations(<json[]>check jsonTrends.locations);
@@ -182,7 +182,7 @@ function convertToTrends(json jsonTrends) returns Trends|error {
     return trendList;
 }
 
-function convertTrendList(json[] jsonTrends) returns Trend[] {
+isolated function convertTrendList(json[] jsonTrends) returns Trend[] {
     Trend[] trendList = [];
     int i = 0;
     foreach json jsonTrend in jsonTrends {
@@ -192,7 +192,7 @@ function convertTrendList(json[] jsonTrends) returns Trend[] {
     return trendList;
 }
 
-function convertToTrend(json jsonTrend) returns Trend {
+isolated function convertToTrend(json jsonTrend) returns Trend {
     Trend trend = {};
     var name = jsonTrend.name;
     if (name is json) {

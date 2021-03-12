@@ -63,7 +63,7 @@ function constructRequestHeaders(http:Request request, string httpMethod, string
     request.setHeader("Authorization", regex:replaceAll(oauthHeaderString, "\\\\\\\\", ""));
 }
 
-function setResponseError(json jsonResponse) returns error {
+isolated function setResponseError(json jsonResponse) returns error {
     json|error errors = check jsonResponse.errors;
     error err;
     if (errors is json[]) {
