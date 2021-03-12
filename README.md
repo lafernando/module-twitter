@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/wso2-ballerina/module-twitter.svg?branch=master)](https://travis-ci.org/wso2-ballerina/module-twitter)
-
 # Ballerina Twitter Connector
 
 The Twitter connector allows you to tweet, retweet, untweet, and search for tweets through the Twitter REST API.
@@ -10,7 +8,6 @@ and top trends using the connector.
 | Ballerina Language Version | Twitter API version  |
 | -------------------------- | -------------------- |
 | Swan Lake                  | 1.1                  |
-
 
 The following sections provide you with information on how to use the Ballerina Twitter connector.
 
